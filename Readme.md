@@ -1,3 +1,4 @@
 # Learning Backend at Next lvl
 
-this is  where i upload my all backend codes in javascript
+Welcome to my backend development learning journey.
+I am learning backend development from scratch and building projects while understanding how real-world APIs and servers work.
