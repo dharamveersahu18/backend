@@ -1,6 +1,3 @@
-
-
-
 // here it may be error later
 class ApiError extends Error {
   constructor(
