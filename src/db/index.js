@@ -1,3 +1,7 @@
+// This file has one major job:
+
+// Connect Node.js to MongoDB.
+
 import mongoose from "mongoose";
 import { DB_NAME } from "../constants.js";//extensionn
 
@@ -35,3 +39,6 @@ export default connectDB;
 //   }
 // }
 // export default connectDB 
+
+
+// connnectionInstance 

@@ -1,4 +1,6 @@
 // here it may be error later
+
+// ApiError is a special version of JavaScript's normal Error
 class ApiError extends Error {
   constructor(
     statusCode,

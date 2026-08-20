@@ -1,3 +1,7 @@
+
+
+// "First connect to MongoDB. If successful, start my server."
+
 //require("dotenv").config({path: "./.env"});
 
 import dotenv from "dotenv";

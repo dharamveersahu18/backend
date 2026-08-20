@@ -1,3 +1,12 @@
+
+// app.js generally handles:
+
+// Express
+// middleware
+// routes
+// JSON parsing
+// cookies, etc.
+
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
