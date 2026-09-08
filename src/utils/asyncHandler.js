@@ -1,10 +1,14 @@
-// We haven't sent the response yet.
-// We've only created an error.
-// That's where middleware comes in.
 
-// This looks complicated, but its purpose is simple:
 
-// If an async controller fails, automatically send the error to next(error).
+// async controller
+//       ↓
+// error happens
+//       ↓
+// asyncHandler catches it
+//       ↓
+// next(error)
+//       ↓
+// error middleware
 
 const asyncHandler = (requestHandler) => {
   return (req, res, next) => {

@@ -23,3 +23,57 @@ class ApiError extends Error {
 }
 
 export { ApiError };
+
+
+
+// Validation
+//     ↓
+// Problem detected
+//     ↓
+// ApiError
+//     ↓
+// Error middleware
+
+// Using ApiError
+// Suppose user doesn't exist.
+
+// Skeleton
+// if (!user) {
+//     throw new ApiError(
+//         /* status code */,
+//         /* message */
+//     );
+// }
+
+// // Understanding super()
+
+// This is important JavaScript knowledge.
+
+// class ApiError extends Error {
+
+
+//     constructor(message) {
+//         super(message);
+//     }
+
+
+// }
+
+// super(message) calls the constructor of the parent class:
+
+// Error
+//  ↑
+//  │ extends
+//  │
+// ApiError
+
+// So:
+
+// super(message)
+
+// initializes the built-in Error.
+
+// That's why your custom error gets things like:
+
+// error.message
+// error.stack
