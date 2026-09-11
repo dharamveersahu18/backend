@@ -2,16 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import connectDB from "../src/db/index.js";
-import { app } from "../src/app.js";
+import app from "../src/app.js";
 
 export default async function handler(req, res) {
   try {
     await connectDB();
-    return new Promise((resolve, reject) => {
-      res.on("finish", resolve);
-      res.on("error", reject);
-      app(req, res);
-    });
+    return app(req, res);
   } catch (error) {
     console.error("Vercel Serverless Handler Error:", error);
     if (!res.headersSent) {
