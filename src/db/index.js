@@ -10,10 +10,18 @@ export const connectDB = async () => {
     if (mongoose.connection.readyState >= 1) {
       return;
     }
-    if (!process.env.MONGODB_URL) {
-      throw new Error("MONGODB_URL environment variable is missing. Please set it in Vercel settings.");
+    const rawUrl = process.env.MONGODB_URL || "";
+    const connectionString = rawUrl.trim().replace(/^["']|["']$/g, "");
+
+    if (!connectionString) {
+      throw new Error("MONGODB_URL environment variable is missing. Please add MONGODB_URL in your Vercel Project Settings > Environment Variables.");
     }
-    const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
+
+    if (!connectionString.startsWith("mongodb://") && !connectionString.startsWith("mongodb+srv://")) {
+      throw new Error(`Invalid MONGODB_URL scheme. Received "${connectionString.slice(0, 15)}...". MONGODB_URL must start with "mongodb://" or "mongodb+srv://". Check Vercel Environment Variables.`);
+    }
+
+    const connectionInstance = await mongoose.connect(connectionString, {
       dbName: DB_NAME,
     });
     console.log(
