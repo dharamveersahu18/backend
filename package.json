@@ -10,8 +10,9 @@
   "author": "Dharam",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "seed": "node src/seed.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -7,15 +7,24 @@ import { DB_NAME } from "../constants.js";//extensionn
 
 export const connectDB = async () => {
   try {
-    const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URL}/${DB_NAME}`
-    );
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
+    if (!process.env.MONGODB_URL) {
+      throw new Error("MONGODB_URL environment variable is missing. Please set it in Vercel settings.");
+    }
+    const connectionInstance = await mongoose.connect(process.env.MONGODB_URL, {
+      dbName: DB_NAME,
+    });
     console.log(
       `\n Connected to MongoDB DB HOST: ${connectionInstance.connection.host}`
     );
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit the process with an error code
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 
