@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import connectDB from "../src/db/index.js";
-import app from "../src/app.js";
+import { app } from "../src/app.js";
 
 export default async function handler(req, res) {
   try {
