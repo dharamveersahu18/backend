@@ -6,20 +6,20 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 const allowedOrigins = [
-  process.env.CORS_ORIGIN,
   "http://localhost:5173",
-  "http://localhost:3000",
-  "http://127.0.0.1:5173",
-].filter(Boolean);
+  "https://videotube-frontend-dvs.vercel.app",
+];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin) || process.env.CORS_ORIGIN === "*") {
-        callback(null, true);
-      } else {
-        callback(null, true); // Permissive for local dev
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
       }
+
+      return callback(
+        new Error(`CORS blocked origin: ${origin}`)
+      );
     },
     credentials: true,
   })
@@ -74,4 +74,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-export { app };
+export { app };
