@@ -1,4 +1,4 @@
-﻿ import mongoose from "mongoose";
+﻿import mongoose from "mongoose";
 import { Video } from "../models/video.models.js";
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -7,7 +7,14 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinay.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 12, query, sortBy = "createdAt", sortType = "desc", userId } = req.query;
+  const {
+    page = 1,
+    limit = 12,
+    query,
+    sortBy = "createdAt",
+    sortType = "desc",
+    userId,
+  } = req.query;
 
   const pipeline = [];
 
@@ -128,6 +135,22 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
     throw new ApiError(400, "Invalid Video ID");
+  }
+  // Find the video first
+  const existingVideo =
+    await Video.findById(videoId).select("isPublished owner");
+
+  if (!existingVideo) {
+    throw new ApiError(404, "Video does not exist");
+  }
+
+  // Check whether the logged-in user owns this video
+  const isOwner =
+    req.user?._id && existingVideo.owner.toString() === req.user._id.toString();
+
+  // Only published videos are public
+  if (!existingVideo.isPublished && !isOwner) {
+    throw new ApiError(404, "Video does not exist");
   }
 
   // Increment view count
@@ -346,7 +369,6 @@ export {
   deleteVideo,
   togglePublishStatus,
 };
-
 
 // // req.query
 //     ↓
