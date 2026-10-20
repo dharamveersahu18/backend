@@ -6,6 +6,14 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
+
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -85,12 +93,6 @@ const registerUser = asyncHandler(async (req, res) => {
     user._id
   );
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-  };
-
   return res
     .status(201)
     .cookie("accessToken", accessToken, cookieOptions)
@@ -144,11 +146,6 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-  };
 
   return res
     .status(200)
@@ -167,6 +164,7 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
+
 const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
@@ -180,12 +178,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
   );
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-  };
-
   return res
     .status(200)
     .clearCookie("accessToken", cookieOptions)
@@ -193,10 +185,11 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
+
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies?.refreshToken ||
-    req.body.refreshToken ||
+    req.body?.refreshToken ||
     req.header("Authorization")?.replace("Bearer ", "");
 
   if (!incomingRefreshToken) {
@@ -222,13 +215,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
 
-const isProduction = process.env.NODE_ENV === "production";
-
-const cookieOptions = {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
-};
 
     return res
       .status(200)
